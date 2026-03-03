@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>Patagonia — RCS Smart Messaging Demo</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -822,9 +825,8 @@ function cardHTML(emoji, bg, title, desc, btn) {
     <div class="info-card-btn">${btn}</div></div></div>`;
 }
 
-function textHTML(side, text, aiBadge) {
-  const badge = aiBadge ? `<div class="ai-tag">Personalized by AI</div>` : '';
-  return `<div class="message ${side}">${badge}<div class="bubble">${text}</div></div>`;
+function textHTML(side, text) {
+  return `<div class="message ${side}"><div class="bubble">${text}</div></div>`;
 }
 
 function tsHTML(t) { return `<div class="timestamp">${t}</div>`; }
@@ -907,7 +909,7 @@ const flows = {
     },
     { // 5: AI Results
       msgs: [
-        { h: textHTML("received", "Perfect profile! Our AI just matched your preferences with our catalog. Here's what we picked for you:", true) },
+        { h: textHTML("received", "Perfect profile! Our AI just matched your preferences with our catalog. Here's what we picked for you:") },
         { h: carouselHTML(["nanoPuff", "capilene", "altvia", "houdini"]) },
         { h: textHTML("received", "And because you're new here \u2014 a little welcome gift \ud83c\udf81") },
         { h: discountHTML("15% OFF", "WELCOME15", "Your first order \u00b7 Expires in 7 days") },
@@ -941,7 +943,7 @@ const flows = {
     { // 0: Deep-personalized opener with browsing behavior
       msgs: [
         { h: tsHTML("Today 2:34 PM") },
-        { h: textHTML("received", "Hey Sarah! You were just on the Nano Puff\u00ae page \u2014 toggled between the Navy and the Forge Grey, opened the size guide twice, and read 4 reviews. You were close \ud83d\ude0f", true) },
+        { h: textHTML("received", "Hey Sarah! You were just on the Nano Puff\u00ae page \u2014 toggled between the Navy and the Forge Grey, opened the size guide twice, and read 4 reviews. You were close \ud83d\ude0f") },
         { h: sessionHTML([["4:12", "Time browsing"], ["2", "Colors compared"], ["2x", "Size guide opened"], ["4", "Reviews read"]]) },
         { h: cardHTML("\ud83e\udde5", "#1B3A5C", "Nano Puff\u00ae Jacket", "Size M \u00b7 Navy Blue \u00b7 Only 3 left in your size!", "View in Cart \u2192") },
         { h: textHTML("received", "It's our #1 purchased jacket by size-M customers this month. Here's one of the reviews you didn't get to:") },
@@ -957,10 +959,10 @@ const flows = {
     },
     { // 1: "How warm is it?" — top FAQ
       msgs: [
-        { h: textHTML("received", "Great question \u2014 it's the #1 thing people ask about the Nano Puff.", true) },
+        { h: textHTML("received", "Great question \u2014 it's the #1 thing people ask about the Nano Puff.") },
         { h: textHTML("received", "<strong>60g PrimaLoft\u00ae Gold insulation.</strong> Warm enough for 25\u201350\u00b0F on its own. Pair it with a base layer and you're good down to 15\u00b0F.") },
         { h: reviewHTML(5, "5.0", "412", "I wear it trail running in 35\u00b0F mornings and it's perfect. Not too hot on the uphills, warm enough at the summit. The breathability is unreal.", "Megan D.") },
-        { h: textHTML("received", "Since you own the Capilene\u00ae Tee \u2014 that combo is one of our most popular layering setups. \ud83d\udca1", true) },
+        { h: textHTML("received", "Since you own the Capilene\u00ae Tee \u2014 that combo is one of our most popular layering setups. \ud83d\udca1") },
       ],
       replies: [
         { text: "Perfect for me!", goto: 4 },
@@ -970,7 +972,7 @@ const flows = {
     },
     { // 2: "Will M fit me?" — size FAQ with purchase history
       msgs: [
-        { h: textHTML("received", "You ordered your Capilene\u00ae Cool Trail Shirt in M last March \u2014 and it fits you well, right?", true) },
+        { h: textHTML("received", "You ordered your Capilene\u00ae Cool Trail Shirt in M last March \u2014 and it fits you well, right?") },
         { h: textHTML("received", "The Nano Puff M runs the same body width. Layer-friendly, no bulk.") },
         { h: cardHTML("\ud83d\udccf", "linear-gradient(135deg, #3b82f6, #1d4ed8)", "Fit Match \u2014 Nano Puff\u00ae", "Your Capilene\u00ae M \u2192 Nano Puff M = \u2705<br>Chest: 38\u201340\" \u00b7 Regular fit \u00b7 Layer-ready", "Full Size Guide") },
         { h: textHTML("received", "Here's someone with a similar build:") },
@@ -984,7 +986,7 @@ const flows = {
     },
     { // 3: "Is $279 worth it?" — value FAQ
       msgs: [
-        { h: textHTML("received", "Fair question. Here's how 2,341 customers think about it:", true) },
+        { h: textHTML("received", "Fair question. Here's how 2,341 customers think about it:") },
         { h: textHTML("received", "The Nano Puff lasts <strong>5+ years</strong> on average. That's <strong>$0.15/day</strong> for a jacket you'll use 3-4 seasons a year.") },
         { h: reviewHTML(5, "5.0", "1", "6 years in. Washed 100+ times. Still looks brand new. I've spent more on jackets that lasted half as long. This one just won't quit.", "David L.") },
         { h: textHTML("received", "We also offer free repairs through Worn Wear \u2014 so if anything ever goes wrong, we fix it. For life. \u267b\ufe0f") },
@@ -998,7 +1000,7 @@ const flows = {
     },
     { // 4: Ready to buy — checkout with social proof
       msgs: [
-        { h: textHTML("received", "Let's do it! 847 people bought the Nano Puff this month \u2014 you're in great company. \ud83d\udd25", true) },
+        { h: textHTML("received", "Let's do it! 847 people bought the Nano Puff this month \u2014 you're in great company. \ud83d\udd25") },
         { h: textHTML("received", "Based on your profile: size M, Navy Blue, shipping to your address on file.") },
         { h: cardHTML("\ud83d\udce6", "linear-gradient(135deg, #34d399, #059669)", "Express Checkout", "Nano Puff\u00ae Jacket \u00b7 M \u00b7 Navy Blue<br>$279 \u00b7 Free 2-Day Shipping", "Complete Purchase \u2192") },
       ],
@@ -1009,7 +1011,7 @@ const flows = {
     },
     { // 5: Size switch to L
       msgs: [
-        { h: textHTML("received", "Totally valid! Here's what L customers say versus M:", true) },
+        { h: textHTML("received", "Totally valid! Here's what L customers say versus M:") },
         { h: reviewHTML(4.7, "4.7", "89", "I'm between M and L. Went L for extra layering room under a shell. Perfect for skiing, but a touch loose with just a tee.", "Ryan P.") },
         { h: textHTML("received", "If you mostly layer (like with your Capilene\u00ae), L gives you room. If you wear it as a standalone, M will look sharper.") },
       ],
@@ -1032,7 +1034,7 @@ const flows = {
     },
     { // 7: Show alternatives with "also bought" data
       msgs: [
-        { h: textHTML("received", "Customers who viewed the Nano Puff also ended up buying these:", true) },
+        { h: textHTML("received", "Customers who viewed the Nano Puff also ended up buying these:") },
         { h: carouselHTML(["downSweater", "microPuff", "torrent"]) },
         { h: textHTML("received", "The Down Sweater is the most popular switch \u2014 warmer, same packability:") },
         { h: reviewHTML(4.7, "4.7", "1,203", "Switched from the Nano Puff to the Down Sweater. Warmer on ski lifts, packs the same. My go-to cold-weather layer now.", "Rachel K.") },
@@ -1045,7 +1047,7 @@ const flows = {
     },
     { // 8: Need warmer with reviews
       msgs: [
-        { h: textHTML("received", "If you need more warmth, here are our top picks for your size:", true) },
+        { h: textHTML("received", "If you need more warmth, here are our top picks for your size:") },
         { h: carouselHTML(["tres", "frozenRange", "downHoody"]) },
         { h: reviewHTML(4.9, "4.9", "876", "Wore the Tres through a -10\u00b0F Colorado winter. The 3-in-1 is genius \u2014 shell alone in fall, with liner in deep winter. Nothing else comes close.", "Chris M.") },
       ],
@@ -1069,7 +1071,7 @@ const flows = {
       msgs: [
         { h: textHTML("received", "Locked in! You're going to love it, Sarah. \ud83d\ude4f") },
         { h: textHTML("received", "Order confirmed \u2014 free 2-day shipping. We'll send tracking updates right here in this chat. \ud83d\udce6") },
-        { h: textHTML("received", "Pro tip: pair it with your Capilene\u00ae base layer for maximum warmth on the trail. That combo is \ud83d\udd25", true) },
+        { h: textHTML("received", "Pro tip: pair it with your Capilene\u00ae base layer for maximum warmth on the trail. That combo is \ud83d\udd25") },
       ],
       replies: []
     },
@@ -1087,7 +1089,7 @@ const flows = {
     { // 12: Save for later
       msgs: [
         { h: textHTML("received", "No rush at all! We've saved your cart for 48 hours. \ud83d\udccc") },
-        { h: textHTML("received", "Since you've been coming back to the Nano Puff all week, here's a little something if you change your mind:", true) },
+        { h: textHTML("received", "Since you've been coming back to the Nano Puff all week, here's a little something if you change your mind:") },
         { h: discountHTML("10% OFF", "JUSTFORYOU", "Any order \u00b7 Valid 48 hours") },
         { h: textHTML("received", "Text us anytime \u2014 happy to help you find the right piece!") },
       ],
@@ -1100,7 +1102,7 @@ const flows = {
     { // 0: Personalized re-engagement with purchase history
       msgs: [
         { h: tsHTML("Today 10:15 AM") },
-        { h: textHTML("received", "Alex! \ud83d\udc4b How's the Powder Town Jacket treating you? It's been 94 days since your last visit.", true) },
+        { h: textHTML("received", "Alex! \ud83d\udc4b How's the Powder Town Jacket treating you? It's been 94 days since your last visit.") },
         { h: textHTML("received", "Ski season is right around the corner \u2014 and we've built some serious new gear since you last geared up. Ryan recorded a quick note for you.") },
         { h: audioHTML("Ryan Gellert, CEO", "0:18") },
       ],
@@ -1112,7 +1114,7 @@ const flows = {
     },
     { // 1: Personalized ski drops
       msgs: [
-        { h: textHTML("received", "Since you're a ski person, here's what we built for this season:", true) },
+        { h: textHTML("received", "Since you're a ski person, here's what we built for this season:") },
         { h: carouselHTML(["snowJkt", "snowBib", "powderBowl", "rLine"]) },
         { h: textHTML("received", "Fun fact \u2014 the new Snowdrifter Bibs pair perfectly with your Powder Town Jacket. Same fit philosophy, 100% recycled shell. \u267b\ufe0f") },
         { h: reviewHTML(4.9, "4.9", "287", "Finally bibs that match the Powder Town quality. Wore them 15 days at Whistler last season. Bombproof.", "Tyler K.") },
@@ -1127,7 +1129,7 @@ const flows = {
       msgs: [
         { h: textHTML("received", "The Snowdrifter Bibs are our most requested product this year. Here's why skiers love them:") },
         { h: reviewHTML(5, "5.0", "1", "I've tried 6 different ski bibs over the years. These are endgame. The powder skirt integrates seamlessly with my Powder Town.", "Nina W.") },
-        { h: textHTML("received", "As a 2-year member with 3 orders, here's your loyalty pick \u2014 curated from what you already own:", true) },
+        { h: textHTML("received", "As a 2-year member with 3 orders, here's your loyalty pick \u2014 curated from what you already own:") },
         { h: carouselHTML(["snowBib", "rLine", "snowShot", "stormPack"]) },
         { h: textHTML("received", "And a thank-you for being a loyal customer: \ud83c\udf81") },
         { h: discountHTML("20% OFF", "LOYALSKIER20", "Loyal member exclusive \u00b7 Alex's code") },
@@ -1141,7 +1143,7 @@ const flows = {
       msgs: [
         { h: textHTML("received", "Since your last visit, we've hit some big milestones! \ud83c\udf0d") },
         { h: textHTML("received", "\u2705 100% recycled packaging on all orders<br>\u2705 73% recycled materials across our line<br>\u2705 2M lbs of ocean plastic removed<br>\u2705 Fair Trade Certified\u2122 across 85% of products") },
-        { h: textHTML("received", "Your Powder Town Jacket? It was made with 68% recycled polyester. The new Snowdrifter Bibs take it to 100%. \u267b\ufe0f", true) },
+        { h: textHTML("received", "Your Powder Town Jacket? It was made with 68% recycled polyester. The new Snowdrifter Bibs take it to 100%. \u267b\ufe0f") },
         { h: textHTML("received", "Have you tried Worn Wear? Trade in your older gear for credit toward new ski equipment.") },
         { h: cardHTML("\u267b\ufe0f", "#2D6A4F", "Worn Wear", "Trade in old Patagonia gear \u2192 get store credit \u2192 gear up for ski season.", "Trade In Your Gear") },
       ],
@@ -1152,7 +1154,7 @@ const flows = {
     },
     { // 4: Ski-focused deals
       msgs: [
-        { h: textHTML("received", "Perfect timing! Pre-season ski deals are live \u2014 curated for your setup:", true) },
+        { h: textHTML("received", "Perfect timing! Pre-season ski deals are live \u2014 curated for your setup:") },
         { h: carouselHTML(["snowBibS", "powderBowlS", "betterSw", "blackHole"]) },
         { h: reviewHTML(4.8, "4.8", "1,567", "Grabbed the Powder Bowl Pants on sale last year. Best deal I've ever gotten on ski pants. Quality is identical to full price.", "Jake M.") },
         { h: textHTML("received", "Your loyal member discount stacks on top! \ud83c\udf81") },
@@ -1166,7 +1168,7 @@ const flows = {
     { // 5: Final
       msgs: [
         { h: textHTML("received", "Welcome back, Alex! The mountains are calling. \ud83c\udfd4\ufe0f") },
-        { h: textHTML("received", "We'll keep you posted on ski drops and deals based on your setup (Powder Town Jacket + whatever you grab next).", true) },
+        { h: textHTML("received", "We'll keep you posted on ski drops and deals based on your setup (Powder Town Jacket + whatever you grab next).") },
         { h: textHTML("received", "See you on the slopes \u2014 text us anytime! \ud83d\udc99") },
       ],
       replies: []
