@@ -938,128 +938,160 @@ const flows = {
 
   // ────────── CART ABANDONMENT ──────────
   cart: [
-    { // 0: Personalized nudge with browsing data
+    { // 0: Deep-personalized opener with browsing behavior
       msgs: [
         { h: tsHTML("Today 2:34 PM") },
-        { h: textHTML("received", "Hey Sarah! You were checking out the Nano Puff\u00ae earlier today \u2014 looked like you were pretty into it. \ud83d\udc40", true) },
-        { h: sessionHTML([["4:12", "Time on page"], ["2", "Colors viewed"], ["3x", "Visited this week"]]) },
+        { h: textHTML("received", "Hey Sarah! You were just on the Nano Puff\u00ae page \u2014 toggled between the Navy and the Forge Grey, opened the size guide twice, and read 4 reviews. You were close \ud83d\ude0f", true) },
+        { h: sessionHTML([["4:12", "Time browsing"], ["2", "Colors compared"], ["2x", "Size guide opened"], ["4", "Reviews read"]]) },
         { h: cardHTML("\ud83e\udde5", "#1B3A5C", "Nano Puff\u00ae Jacket", "Size M \u00b7 Navy Blue \u00b7 Only 3 left in your size!", "View in Cart \u2192") },
-        { h: reviewHTML(4.8, "4.8", "2,341", "Best lightweight jacket I've ever owned. Packs down to nothing but keeps me warm on 40\u00b0F mornings. I bring it literally everywhere.", "Jamie R.") },
+        { h: textHTML("received", "It's our #1 purchased jacket by size-M customers this month. Here's one of the reviews you didn't get to:") },
+        { h: reviewHTML(4.8, "4.8", "2,341", "I was on the fence for 2 weeks. Finally pulled the trigger and it's now the jacket I reach for every single day. Insanely light, surprisingly warm.", "Jamie R.") },
+        { h: textHTML("received", "People shopping the Nano Puff usually have a few questions before committing. Anything on your mind?") },
       ],
       replies: [
-        { text: "I was! Let's do it \u2705", goto: 1 },
-        { text: "I had some questions \ud83e\udd14", goto: 2 },
-        { text: "Not for me", goto: 7 },
+        { text: "How warm is it really? \ud83c\udf21\ufe0f", goto: 1 },
+        { text: "Will size M fit me? \ud83d\udccf", goto: 2 },
+        { text: "Is $279 worth it? \ud83d\udcb0", goto: 3 },
+        { text: "I'm ready, let's go! \u2705", goto: 4 },
       ]
     },
-    { // 1: Social proof checkout
+    { // 1: "How warm is it?" — top FAQ
       msgs: [
-        { h: textHTML("received", "Great taste \u2014 847 people bought the Nano Puff this month alone. \ud83d\udd25", true) },
-        { h: textHTML("received", "Based on your last order (Capilene\u00ae Tee, size M in March), size M should be a perfect fit here too.") },
-        { h: cardHTML("\ud83d\udce6", "linear-gradient(135deg, #34d399, #059669)", "Express Checkout", "Nano Puff\u00ae Jacket \u00b7 Size M \u00b7 Navy Blue<br>$279 \u00b7 Free 2-Day Shipping", "Proceed to Checkout \u2192") },
+        { h: textHTML("received", "Great question \u2014 it's the #1 thing people ask about the Nano Puff.", true) },
+        { h: textHTML("received", "<strong>60g PrimaLoft\u00ae Gold insulation.</strong> Warm enough for 25\u201350\u00b0F on its own. Pair it with a base layer and you're good down to 15\u00b0F.") },
+        { h: reviewHTML(5, "5.0", "412", "I wear it trail running in 35\u00b0F mornings and it's perfect. Not too hot on the uphills, warm enough at the summit. The breathability is unreal.", "Megan D.") },
+        { h: textHTML("received", "Since you own the Capilene\u00ae Tee \u2014 that combo is one of our most popular layering setups. \ud83d\udca1", true) },
       ],
       replies: [
-        { text: "Checkout now \u2192", goto: 6 },
-        { text: "Wait, I have questions", goto: 2 },
+        { text: "Perfect for me!", goto: 4 },
+        { text: "I need something warmer", goto: 8 },
+        { text: "What about sizing? \ud83d\udccf", goto: 2 },
       ]
     },
-    { // 2: Help deciding
+    { // 2: "Will M fit me?" — size FAQ with purchase history
       msgs: [
-        { h: textHTML("received", "I'm here! What's on your mind?") },
+        { h: textHTML("received", "You ordered your Capilene\u00ae Cool Trail Shirt in M last March \u2014 and it fits you well, right?", true) },
+        { h: textHTML("received", "The Nano Puff M runs the same body width. Layer-friendly, no bulk.") },
+        { h: cardHTML("\ud83d\udccf", "linear-gradient(135deg, #3b82f6, #1d4ed8)", "Fit Match \u2014 Nano Puff\u00ae", "Your Capilene\u00ae M \u2192 Nano Puff M = \u2705<br>Chest: 38\u201340\" \u00b7 Regular fit \u00b7 Layer-ready", "Full Size Guide") },
+        { h: textHTML("received", "Here's someone with a similar build:") },
+        { h: reviewHTML(4.9, "4.9", "318", "5'10, 172 lbs. M fits perfectly \u2014 snug enough to layer under a shell, roomy enough over a tee. Don't size up.", "Marcus T.") },
       ],
       replies: [
-        { text: "Sizing questions \ud83d\udccf", goto: 3 },
-        { text: "Show me alternatives \ud83d\udd04", goto: 4 },
-        { text: "Price is steep \ud83d\udcb0", goto: 5 },
+        { text: "M it is!", goto: 4 },
+        { text: "Maybe I should go Large", goto: 5 },
+        { text: "What about warmth? \ud83c\udf21\ufe0f", goto: 1 },
       ]
     },
-    { // 3: Sizing with purchase history
+    { // 3: "Is $279 worth it?" — value FAQ
       msgs: [
-        { h: textHTML("received", "Good news \u2014 you ordered your Capilene\u00ae Cool Trail Shirt in M last March and loved the fit.", true) },
-        { h: textHTML("received", "The Nano Puff M runs the same body width. Layer-friendly without any bulk.") },
-        { h: cardHTML("\ud83d\udccf", "linear-gradient(135deg, #3b82f6, #1d4ed8)", "Fit Guide \u2014 Nano Puff\u00ae", "Chest: M = 38\u201340\" \u00b7 Regular fit<br>Your Capilene\u00ae M \u2192 Nano Puff M = \u2705 Match", "Full Size Guide") },
-        { h: reviewHTML(4.9, "4.9", "318", "I'm 5'10, 170 lbs, M fits like a glove. Perfect for layering over a base layer on cold trail mornings.", "Marcus T.") },
+        { h: textHTML("received", "Fair question. Here's how 2,341 customers think about it:", true) },
+        { h: textHTML("received", "The Nano Puff lasts <strong>5+ years</strong> on average. That's <strong>$0.15/day</strong> for a jacket you'll use 3-4 seasons a year.") },
+        { h: reviewHTML(5, "5.0", "1", "6 years in. Washed 100+ times. Still looks brand new. I've spent more on jackets that lasted half as long. This one just won't quit.", "David L.") },
+        { h: textHTML("received", "We also offer free repairs through Worn Wear \u2014 so if anything ever goes wrong, we fix it. For life. \u267b\ufe0f") },
+        { h: audioHTML("Patagonia Gear Specialist", "0:12") },
       ],
       replies: [
-        { text: "Size M is perfect", goto: 1 },
-        { text: "Switch to Large", goto: 1 },
-        { text: "Still not sure", goto: 4 },
+        { text: "Convinced, let's go! \u2705", goto: 4 },
+        { text: "Still a stretch\u2026", goto: 6 },
+        { text: "Show me alternatives", goto: 7 },
       ]
     },
-    { // 4: Alternatives with "also viewed"
+    { // 4: Ready to buy — checkout with social proof
       msgs: [
-        { h: textHTML("received", "Customers who viewed the Nano Puff also bought these:", true) },
-        { h: carouselHTML(["downSweater", "microPuff", "torrent"]) },
-        { h: reviewHTML(4.7, "4.7", "1,203", "Warmer than the Nano Puff. My go-to for ski lifts and cold morning hikes. Worth every penny.", "Rachel K.") },
+        { h: textHTML("received", "Let's do it! 847 people bought the Nano Puff this month \u2014 you're in great company. \ud83d\udd25", true) },
+        { h: textHTML("received", "Based on your profile: size M, Navy Blue, shipping to your address on file.") },
+        { h: cardHTML("\ud83d\udce6", "linear-gradient(135deg, #34d399, #059669)", "Express Checkout", "Nano Puff\u00ae Jacket \u00b7 M \u00b7 Navy Blue<br>$279 \u00b7 Free 2-Day Shipping", "Complete Purchase \u2192") },
       ],
       replies: [
-        { text: "The Down Sweater looks great!", goto: 6 },
-        { text: "Back to Nano Puff", goto: 1 },
-        { text: "Nothing feels right", goto: 5 },
+        { text: "Checkout now \u2192", goto: 10 },
+        { text: "Wait, one more question", goto: 9 },
       ]
     },
-    { // 5: Price with cost-per-wear + social proof
+    { // 5: Size switch to L
       msgs: [
-        { h: textHTML("received", "Hear you out \u2014 $279 is an investment. Here's how our community thinks about it:", true) },
-        { h: textHTML("received", "The Nano Puff lasts 5+ years on average. That's <strong>$0.15/day</strong> for a jacket rated 4.8\u2605 by 2,341 people.") },
-        { h: audioHTML("Patagonia Gear Specialist", "0:15") },
-        { h: reviewHTML(5, "5.0", "1", "I've had mine for 6 years. Washed it 100+ times. Still looks and performs like new. Best cost-per-wear in my closet.", "David L.") },
-        { h: textHTML("received", "And since you've been eyeing it all week \u2014 here's a nudge:") },
+        { h: textHTML("received", "Totally valid! Here's what L customers say versus M:", true) },
+        { h: reviewHTML(4.7, "4.7", "89", "I'm between M and L. Went L for extra layering room under a shell. Perfect for skiing, but a touch loose with just a tee.", "Ryan P.") },
+        { h: textHTML("received", "If you mostly layer (like with your Capilene\u00ae), L gives you room. If you wear it as a standalone, M will look sharper.") },
+      ],
+      replies: [
+        { text: "I'll go with M", goto: 4 },
+        { text: "Large sounds better", goto: 4 },
+        { text: "Can I exchange if it's wrong?", goto: 11 },
+      ]
+    },
+    { // 6: Still a stretch — discount nudge
+      msgs: [
+        { h: textHTML("received", "I get it. Here's something to help \u2014 since you've come back 3 times this week, this one's for you:") },
         { h: discountHTML("10% OFF", "COMEBACK10", "Your cart \u00b7 Expires in 2 hours") },
+        { h: textHTML("received", "That brings it to <strong>$251</strong> \u2014 and you still get free 2-day shipping + free lifetime repairs. \ud83d\udca1") },
       ],
       replies: [
-        { text: "Apply & checkout \ud83d\uded2", goto: 6 },
-        { text: "Still thinking\u2026", goto: 8 },
+        { text: "Apply & checkout \ud83d\uded2", goto: 10 },
+        { text: "Still thinking\u2026", goto: 12 },
       ]
     },
-    { // 6: Success
+    { // 7: Show alternatives with "also bought" data
+      msgs: [
+        { h: textHTML("received", "Customers who viewed the Nano Puff also ended up buying these:", true) },
+        { h: carouselHTML(["downSweater", "microPuff", "torrent"]) },
+        { h: textHTML("received", "The Down Sweater is the most popular switch \u2014 warmer, same packability:") },
+        { h: reviewHTML(4.7, "4.7", "1,203", "Switched from the Nano Puff to the Down Sweater. Warmer on ski lifts, packs the same. My go-to cold-weather layer now.", "Rachel K.") },
+      ],
+      replies: [
+        { text: "The Down Sweater!", goto: 10 },
+        { text: "Back to Nano Puff", goto: 4 },
+        { text: "Nothing feels right", goto: 12 },
+      ]
+    },
+    { // 8: Need warmer with reviews
+      msgs: [
+        { h: textHTML("received", "If you need more warmth, here are our top picks for your size:", true) },
+        { h: carouselHTML(["tres", "frozenRange", "downHoody"]) },
+        { h: reviewHTML(4.9, "4.9", "876", "Wore the Tres through a -10\u00b0F Colorado winter. The 3-in-1 is genius \u2014 shell alone in fall, with liner in deep winter. Nothing else comes close.", "Chris M.") },
+      ],
+      replies: [
+        { text: "The Tres Parka is perfect!", goto: 10 },
+        { text: "Back to Nano Puff", goto: 4 },
+      ]
+    },
+    { // 9: One more question
+      msgs: [
+        { h: textHTML("received", "Of course! What's still on your mind?") },
+      ],
+      replies: [
+        { text: "How warm is it? \ud83c\udf21\ufe0f", goto: 1 },
+        { text: "Will M fit me? \ud83d\udccf", goto: 2 },
+        { text: "Is $279 worth it? \ud83d\udcb0", goto: 3 },
+        { text: "Can I return it?", goto: 11 },
+      ]
+    },
+    { // 10: Success
       msgs: [
         { h: textHTML("received", "Locked in! You're going to love it, Sarah. \ud83d\ude4f") },
-        { h: textHTML("received", "Order confirmed \u2014 free 2-day shipping. We'll send tracking updates right here. \ud83d\udce6") },
-        { h: textHTML("received", "Pro tip: pair it with your Capilene\u00ae base layer for maximum warmth on the trail. Enjoy! \ud83c\udfd4\ufe0f", true) },
+        { h: textHTML("received", "Order confirmed \u2014 free 2-day shipping. We'll send tracking updates right here in this chat. \ud83d\udce6") },
+        { h: textHTML("received", "Pro tip: pair it with your Capilene\u00ae base layer for maximum warmth on the trail. That combo is \ud83d\udd25", true) },
       ],
       replies: []
     },
-    { // 7: Not interested - personalized redirect
+    { // 11: Return / exchange policy
       msgs: [
-        { h: textHTML("received", "No pressure! Since you've been browsing insulated jackets this week, want to see some other options?", true) },
+        { h: textHTML("received", "Absolutely. Our Ironclad Guarantee \u2014 if you're not 100% satisfied, return or exchange anytime. No questions asked.") },
+        { h: textHTML("received", "Plus free shipping on all returns. We'll even send you a prepaid label right here. \ud83d\udce9") },
+        { h: reviewHTML(5, "5.0", "1", "Ordered M and L to compare. Returned L with zero hassle \u2014 prepaid label, refund in 3 days. Now THAT's customer service.", "Aisha T.") },
       ],
       replies: [
-        { text: "Something warmer \ud83e\udde5", goto: 9 },
-        { text: "Something lighter \ud83c\udf24\ufe0f", goto: 10 },
-        { text: "Just browsing", goto: 8 },
+        { text: "That's reassuring, let's go!", goto: 4 },
+        { text: "I'll think about it", goto: 12 },
       ]
     },
-    { // 8: Save for later
+    { // 12: Save for later
       msgs: [
-        { h: textHTML("received", "No rush! We've saved your cart for 48 hours. \ud83d\udccc") },
-        { h: textHTML("received", "Since you've viewed the Nano Puff 3 times this week, here's a little something in case you come back:", true) },
+        { h: textHTML("received", "No rush at all! We've saved your cart for 48 hours. \ud83d\udccc") },
+        { h: textHTML("received", "Since you've been coming back to the Nano Puff all week, here's a little something if you change your mind:", true) },
         { h: discountHTML("10% OFF", "JUSTFORYOU", "Any order \u00b7 Valid 48 hours") },
         { h: textHTML("received", "Text us anytime \u2014 happy to help you find the right piece!") },
       ],
       replies: []
-    },
-    { // 9: Warmer alternatives with reviews
-      msgs: [
-        { h: textHTML("received", "Based on your browsing history (insulated jackets, size M), these are our warmest options:", true) },
-        { h: carouselHTML(["tres", "frozenRange", "downHoody"]) },
-        { h: reviewHTML(4.9, "4.9", "876", "Wore this through a -10\u00b0F Colorado winter. Nothing else comes close. The 3-in-1 versatility is a game changer.", "Chris M.") },
-      ],
-      replies: [
-        { text: "The Tres Parka is perfect!", goto: 6 },
-        { text: "Show me more", goto: 4 },
-      ]
-    },
-    { // 10: Lighter alternatives
-      msgs: [
-        { h: textHTML("received", "For lighter days \u2014 these pair well with what you already own (Capilene\u00ae Tee):", true) },
-        { h: carouselHTML(["tropic", "airshed", "strider"]) },
-        { h: reviewHTML(4.6, "4.6", "542", "The Airshed is my go-to layer when it's too warm for a jacket but too cool for just a tee. Weighs nothing.", "Priya S.") },
-      ],
-      replies: [
-        { text: "The Airshed looks great!", goto: 6 },
-        { text: "Not quite\u2026", goto: 8 },
-      ]
     },
   ],
 
@@ -1075,6 +1107,7 @@ const flows = {
       ],
       replies: [
         { text: "Love my Powder Town! \u2744\ufe0f", goto: 1 },
+        { text: "What pairs with my jacket? \ud83c\udfbf", goto: 2 },
         { text: "What's new for ski? \ud83d\udc40", goto: 1 },
       ]
     },
