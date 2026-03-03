@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Patagonia — RCS Smart Messaging Demo</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #050507;
+  --surface: #111115;
+  --border: #222228;
+  --text: #f0f0f5;
+  --text-muted: #888894;
+  --patagonia: #1B3A5C;
+  --accent: #007AFF;
+  --chat-bg: #f2f2f7;
+  --received: #e9e9eb;
+  --received-text: #1a1a1a;
+  --sent: #007AFF;
+  --sent-text: #ffffff;
+  --ai-badge: linear-gradient(135deg, #6366f1, #a855f7, #ec4899);
+}
+
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ═══════════════════ HEADER ═══════════════════ */
+.header {
+  text-align: center;
+  padding: 40px 20px 30px;
+  position: relative;
+}
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: rgba(99,102,241,0.1);
+  border: 1px solid rgba(99,102,241,0.2);
+  font-size: 12px;
+  font-weight: 600;
+  color: #a5b4fc;
+  margin-bottom: 16px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.header h1 {
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, #fff 0%, #a5b4fc 50%, #c084fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.header p {
+  color: var(--text-muted);
+  font-size: 16px;
+  max-width: 500px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+/* ═══════════════════ TABS ═══════════════════ */
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 24px 20px 8px;
+  flex-wrap: wrap;
+}
+.tab-btn {
+  padding: 10px 22px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tab-btn:hover { border-color: #444; color: var(--text); }
+.tab-btn.active {
+  background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(168,85,247,0.15));
+  border-color: rgba(99,102,241,0.4);
+  color: #c4b5fd;
+}
+.tab-icon { font-size: 18px; }
+
+/* ═══════════════════ FLOW CONTAINERS ═══════════════════ */
+.flow-container { display: none; padding: 30px 20px 60px; }
+.flow-container.active { display: flex; justify-content: center; }
+
+/* ═══════════════════ iPHONE MOCKUP ═══════════════════ */
+.iphone-wrapper { position: relative; }
+.iphone {
+  width: 390px;
+  height: 844px;
+  border-radius: 50px;
+  background: #000;
+  padding: 4px;
+  position: relative;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.08),
+    0 20px 60px rgba(0,0,0,0.6),
+    0 0 100px rgba(99,102,241,0.07);
+}
+.iphone-screen {
+  width: 100%;
+  height: 100%;
+  border-radius: 47px;
+  overflow: hidden;
+  background: var(--chat-bg);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.dynamic-island {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 126px;
+  height: 36px;
+  background: #000;
+  border-radius: 20px;
+  z-index: 10;
+}
+.status-bar {
+  height: 58px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0 32px 6px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a1a;
+  flex-shrink: 0;
+  background: #fff;
+}
+.status-bar-left { width: 60px; }
+.status-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+}
+
+/* Chat Header */
+.chat-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px 10px;
+  background: #fff;
+  border-bottom: 0.5px solid #d1d1d6;
+  flex-shrink: 0;
+}
+.chat-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--patagonia);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 800;
+  color: #fff;
+}
+.chat-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+.chat-name small {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  color: #65c466;
+}
+
+/* Chat Area */
+.chat-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 12px 20px;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+.chat-area::-webkit-scrollbar { width: 0; }
+
+/* Home Indicator */
+.home-indicator {
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--chat-bg);
+  flex-shrink: 0;
+}
+.home-indicator-bar {
+  width: 134px;
+  height: 5px;
+  background: #1a1a1a;
+  border-radius: 3px;
+  opacity: 0.2;
+}
+
+/* ═══════════════════ MESSAGES ═══════════════════ */
+.message {
+  max-width: 78%;
+  margin-bottom: 6px;
+  animation: msgIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.message.received {
+  margin-right: auto;
+}
+.message.sent {
+  margin-left: auto;
+}
+.bubble {
+  padding: 9px 14px;
+  border-radius: 18px;
+  font-size: 15px;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+.received .bubble {
+  background: var(--received);
+  color: var(--received-text);
+  border-bottom-left-radius: 6px;
+}
+.sent .bubble {
+  background: var(--sent);
+  color: var(--sent-text);
+  border-bottom-right-radius: 6px;
+}
+
+/* AI Badge */
+.ai-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 10px;
+  background: var(--ai-badge);
+  font-size: 10px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 4px;
+  letter-spacing: 0.5px;
+}
+.ai-tag::before { content: '✦ '; }
+
+/* Timestamp */
+.timestamp {
+  text-align: center;
+  font-size: 11px;
+  color: #8e8e93;
+  margin: 12px 0 8px;
+  font-weight: 500;
+}
+
+/* ═══════════════════ AUDIO MESSAGE ═══════════════════ */
+.audio-msg {
+  background: var(--received);
+  border-radius: 18px;
+  border-bottom-left-radius: 6px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: background 0.2s;
+  max-width: 240px;
+}
+.audio-msg:hover { background: #dddde0; }
+.audio-play {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.audio-play svg { fill: #fff; width: 14px; height: 14px; margin-left: 2px; }
+.audio-bars {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 28px;
+  flex: 1;
+}
+.audio-bar {
+  width: 3px;
+  border-radius: 2px;
+  background: #8e8e93;
+  transition: background 0.3s;
+}
+.audio-msg.playing .audio-bar {
+  background: var(--accent);
+  animation: audioWave 0.6s ease-in-out infinite alternate;
+}
+.audio-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  font-size: 11px;
+  color: #8e8e93;
+}
+.audio-sender { font-weight: 600; color: #636366; }
+
+/* ═══════════════════ PRODUCT CAROUSEL ═══════════════════ */
+.carousel-wrapper {
+  margin: 6px 0;
+  animation: msgIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.carousel {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 4px 0 8px;
+  -webkit-overflow-scrolling: touch;
+}
+.carousel::-webkit-scrollbar { height: 0; }
+.product-card {
+  min-width: 152px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #fff;
+  scroll-snap-align: start;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  flex-shrink: 0;
+}
+.product-img {
+  height: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 42px;
+  position: relative;
+}
+.product-info {
+  padding: 10px 12px 12px;
+}
+.product-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: #1a1a1a;
+  line-height: 1.3;
+  margin-bottom: 4px;
+}
+.product-price {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--patagonia);
+}
+.product-price .original {
+  text-decoration: line-through;
+  color: #999;
+  font-weight: 500;
+  font-size: 12px;
+  margin-left: 4px;
+}
+.product-cta {
+  display: block;
+  text-align: center;
+  padding: 7px;
+  margin: 8px 12px 12px;
+  border-radius: 10px;
+  background: var(--patagonia);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* ═══════════════════ DISCOUNT CARD ═══════════════════ */
+.discount-card {
+  border-radius: 16px;
+  padding: 2px;
+  background: linear-gradient(135deg, #34d399, #3b82f6, #8b5cf6);
+  margin: 6px 0;
+  animation: msgIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  max-width: 280px;
+}
+.discount-inner {
+  background: #fff;
+  border-radius: 14px;
+  padding: 16px;
+  text-align: center;
+}
+.discount-amount {
+  font-size: 32px;
+  font-weight: 900;
+  background: linear-gradient(135deg, #34d399, #3b82f6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 4px;
+}
+.discount-label {
+  font-size: 12px;
+  color: #636366;
+  margin-bottom: 10px;
+}
+.discount-code {
+  display: inline-block;
+  padding: 6px 20px;
+  border-radius: 8px;
+  border: 2px dashed #d1d5db;
+  font-size: 16px;
+  font-weight: 800;
+  color: #1a1a1a;
+  letter-spacing: 2px;
+}
+
+/* ═══════════════════ SINGLE CARD ═══════════════════ */
+.info-card {
+  border-radius: 16px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  margin: 6px 0;
+  animation: msgIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  max-width: 280px;
+}
+.info-card-img {
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+}
+.info-card-body { padding: 14px 16px; }
+.info-card-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 4px;
+}
+.info-card-desc {
+  font-size: 12px;
+  color: #636366;
+  line-height: 1.4;
+  margin-bottom: 10px;
+}
+.info-card-btn {
+  display: block;
+  padding: 9px;
+  border-radius: 10px;
+  background: var(--patagonia);
+  color: #fff;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+/* ═══════════════════ QUICK REPLIES ═══════════════════ */
+.quick-replies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 0 2px;
+  animation: repliesIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.qr-btn {
+  padding: 9px 18px;
+  border-radius: 20px;
+  border: 1.5px solid var(--accent);
+  background: #fff;
+  color: var(--accent);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.qr-btn:hover {
+  background: var(--accent);
+  color: #fff;
+  transform: scale(1.03);
+}
+.qr-btn:active { transform: scale(0.97); }
+
+/* ═══════════════════ TYPING INDICATOR ═══════════════════ */
+.typing {
+  display: flex;
+  gap: 4px;
+  padding: 12px 16px;
+  background: var(--received);
+  border-radius: 18px;
+  border-bottom-left-radius: 6px;
+  width: fit-content;
+  margin-bottom: 6px;
+}
+.typing-dot {
+  width: 8px;
+  height: 8px;
+  background: #8e8e93;
+  border-radius: 50%;
+  animation: typingBounce 1.4s ease-in-out infinite;
+}
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+/* ═══════════════════ RESET BUTTON ═══════════════════ */
+.reset-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 16px auto 0;
+  padding: 8px 20px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.reset-btn:hover { border-color: #555; color: var(--text); }
+
+/* ═══════════════════ ANIMATIONS ═══════════════════ */
+@keyframes msgIn {
+  from { opacity: 0; transform: translateY(10px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes repliesIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes typingBounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-6px); opacity: 1; }
+}
+@keyframes audioWave {
+  0% { transform: scaleY(0.4); }
+  100% { transform: scaleY(1); }
+}
+
+/* ═══════════════════ RESPONSIVE ═══════════════════ */
+@media (max-width: 500px) {
+  .iphone { width: 340px; height: 736px; border-radius: 44px; }
+  .iphone-screen { border-radius: 41px; }
+  .header h1 { font-size: 26px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="badge">Interactive Demo</div>
+  <h1>Patagonia × RCS Messaging</h1>
+  <p>AI-powered conversational journeys that break the one-way SMS wall.</p>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('welcome')">
+    <span class="tab-icon">👋</span> Welcome Flow
+  </button>
+  <button class="tab-btn" onclick="switchTab('cart')">
+    <span class="tab-icon">🛒</span> Cart Abandonment
+  </button>
+  <button class="tab-btn" onclick="switchTab('winback')">
+    <span class="tab-icon">💙</span> Win-back
+  </button>
+</div>
+
+<div id="flow-welcome" class="flow-container active">
+  <div class="iphone-wrapper">
+    <div class="iphone"><div class="iphone-screen">
+      <div class="dynamic-island"></div>
+      <div class="status-bar">
+        <div class="status-bar-left">9:41</div>
+        <div class="status-bar-right">
+          <svg width="16" height="12" viewBox="0 0 16 12"><path fill="#1a1a1a" d="M1 7h2v5H1zM5 4h2v8H5zM9 2h2v10H9zM13 0h2v12h-2z"/></svg>
+          <svg width="16" height="12" viewBox="0 0 16 12"><path fill="#1a1a1a" d="M8 2C5.8 2 3.8 2.9 2.3 4.3l1.4 1.4C5 4.4 6.4 3.7 8 3.7s3 .7 4.3 2l1.4-1.4C12.2 2.9 10.2 2 8 2zm0 4c-1.3 0-2.5.5-3.4 1.4L6 8.8c.5-.5 1.2-.8 2-.8s1.5.3 2 .8l1.4-1.4C10.5 6.5 9.3 6 8 6zm0 4a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"/></svg>
+          <svg width="27" height="12" viewBox="0 0 27 12"><rect x="0" y="1" width="22" height="10" rx="2" stroke="#1a1a1a" stroke-width="1" fill="none"/><rect x="23" y="3.5" width="2" height="5" rx="1" fill="#1a1a1a"/><rect x="2" y="3" width="18" height="6" rx="1" fill="#34c759"/></svg>
+        </div>
+      </div>
+      <div class="chat-header">
+        <div class="chat-avatar">P</div>
+        <div><div class="chat-name">Patagonia <small>Online now</small></div></div>
+      </div>
+      <div class="chat-area" id="chat-welcome"></div>
+      <div class="home-indicator"><div class="home-indicator-bar"></div></div>
+    </div></div>
+    <button class="reset-btn" onclick="resetFlow('welcome')">↺ Restart flow</button>
+  </div>
+</div>
+
+<div id="flow-cart" class="flow-container">
+  <div class="iphone-wrapper">
+    <div class="iphone"><div class="iphone-screen">
+      <div class="dynamic-island"></div>
+      <div class="status-bar">
+        <div class="status-bar-left">9:41</div>
+        <div class="status-bar-right">
+          <svg width="16" height="12" viewBox="0 0 16 12"><path fill="#1a1a1a" d="M1 7h2v5H1zM5 4h2v8H5zM9 2h2v10H9zM13 0h2v12h-2z"/></svg>
+          <svg width="16" height="12" viewBox="0 0 16 12"><path fill="#1a1a1a" d="M8 2C5.8 2 3.8 2.9 2.3 4.3l1.4 1.4C5 4.4 6.4 3.7 8 3.7s3 .7 4.3 2l1.4-1.4C12.2 2.9 10.2 2 8 2zm0 4c-1.3 0-2.5.5-3.4 1.4L6 8.8c.5-.5 1.2-.8 2-.8s1.5.3 2 .8l1.4-1.4C10.5 6.5 9.3 6 8 6zm0 4a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"/></svg>
+          <svg width="27" height="12" viewBox="0 0 27 12"><rect x="0" y="1" width="22" height="10" rx="2" stroke="#1a1a1a" stroke-width="1" fill="none"/><rect x="23" y="3.5" width="2" height="5" rx="1" fill="#1a1a1a"/><rect x="2" y="3" width="18" height="6" rx="1" fill="#34c759"/></svg>
+        </div>
+      </div>
+      <div class="chat-header">
+        <div class="chat-avatar">P</div>
+        <div><div class="chat-name">Patagonia <small>Online now</small></div></div>
+      </div>
+      <div class="chat-area" id="chat-cart"></div>
+      <div class="home-indicator"><div class="home-indicator-bar"></div></div>
+    </div></div>
+    <button class="reset-btn" onclick="resetFlow('cart')">↺ Restart flow</button>
+  </div>
+</div>
+
+<div id="flow-winback" class="flow-container">
+  <div class="iphone-wrapper">
+    <div class="iphone"><div class="iphone-screen">
+      <div class="dynamic-island"></div>
+      <div class="status-bar">
+        <div class="status-bar-left">9:41</div>
+        <div class="status-bar-right">
+          <svg width="16" height="12" viewBox="0 0 16 12"><path fill="#1a1a1a" d="M1 7h2v5H1zM5 4h2v8H5zM9 2h2v10H9zM13 0h2v12h-2z"/></svg>
+          <svg width="16" height="12" viewBox="0 0 16 12"><path fill="#1a1a1a" d="M8 2C5.8 2 3.8 2.9 2.3 4.3l1.4 1.4C5 4.4 6.4 3.7 8 3.7s3 .7 4.3 2l1.4-1.4C12.2 2.9 10.2 2 8 2zm0 4c-1.3 0-2.5.5-3.4 1.4L6 8.8c.5-.5 1.2-.8 2-.8s1.5.3 2 .8l1.4-1.4C10.5 6.5 9.3 6 8 6zm0 4a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"/></svg>
+          <svg width="27" height="12" viewBox="0 0 27 12"><rect x="0" y="1" width="22" height="10" rx="2" stroke="#1a1a1a" stroke-width="1" fill="none"/><rect x="23" y="3.5" width="2" height="5" rx="1" fill="#1a1a1a"/><rect x="2" y="3" width="18" height="6" rx="1" fill="#34c759"/></svg>
+        </div>
+      </div>
+      <div class="chat-header">
+        <div class="chat-avatar">P</div>
+        <div><div class="chat-name">Patagonia <small>Online now</small></div></div>
+      </div>
+      <div class="chat-area" id="chat-winback"></div>
+      <div class="home-indicator"><div class="home-indicator-bar"></div></div>
+    </div></div>
+    <button class="reset-btn" onclick="resetFlow('winback')">↺ Restart flow</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════ PRODUCT DATA ═══════════════════
+const P = {
+  nanoPuff:    { n: "Nano Puff\u00ae Jacket",         p: "$279", e: "\ud83e\udde5", c: "#1B3A5C" },
+  capilene:    { n: "Capilene\u00ae Trail Shirt",      p: "$55",  e: "\ud83d\udc55", c: "#2D6A4F" },
+  altvia:      { n: "Altvia Trail Shorts",             p: "$79",  e: "\ud83e\ude73", c: "#7C5B3A" },
+  houdini:     { n: "Houdini Air Jacket",              p: "$139", e: "\ud83c\udf2c\ufe0f", c: "#4A4E69" },
+  downSweater: { n: "Down Sweater",                    p: "$299", e: "\ud83e\udde5", c: "#2D3A4A" },
+  microPuff:   { n: "Micro Puff\u00ae Hoody",         p: "$349", e: "\ud83e\udde5", c: "#3A5A2A" },
+  torrent:     { n: "Torrentshell 3L",                 p: "$179", e: "\ud83c\udf27\ufe0f", c: "#1A3A5A" },
+  woolJacket:  { n: "Recycled Wool Jacket",            p: "$349", e: "\ud83e\uddf6", c: "#4A3A2A" },
+  stormPack:   { n: "Storm Shift Pack",                p: "$189", e: "\ud83c\udf92", c: "#2A3A4A" },
+  regenShorts: { n: "Regenerative Shorts",             p: "$99",  e: "\ud83e\ude73", c: "#3A4A2A" },
+  cleanTee:    { n: "Clean Color Tee",                 p: "$65",  e: "\ud83d\udc55", c: "#5A3A4A" },
+  betterSw:    { n: "Better Sweater\u00ae",            p: "$99",  op: "$159", e: "\ud83e\udde5", c: "#3A4A3A" },
+  baggies:     { n: "Baggies\u2122 Shorts",            p: "$39",  op: "$65",  e: "\ud83e\ude73", c: "#4A3A3A" },
+  p6tee:       { n: "P-6 Logo Responsibili-Tee",      p: "$29",  op: "$45",  e: "\ud83d\udc55", c: "#3A3A4A" },
+  blackHole:   { n: "Black Hole\u00ae Duffel",        p: "$109", op: "$169", e: "\ud83d\udc5c", c: "#2A2A3A" },
+  tres:        { n: "Tres 3-in-1 Parka",               p: "$549", e: "\ud83e\udde5", c: "#1A2A3A" },
+  frozenRange: { n: "Frozen Range Jacket",             p: "$499", e: "\ud83c\udfd4\ufe0f", c: "#2A3A5A" },
+  downHoody:   { n: "Down Sweater Hoody",              p: "$329", e: "\ud83e\udde5", c: "#3A2A4A" },
+  tropic:      { n: "Tropic Comfort\u00ae Shirt",     p: "$69",  e: "\ud83d\udc55", c: "#4A5A3A" },
+  airshed:     { n: "Airshed Pro Pullover",            p: "$129", e: "\ud83c\udf2c\ufe0f", c: "#3A5A5A" },
+  strider:     { n: "Strider Pro Shorts",              p: "$79",  e: "\ud83e\ude73", c: "#5A4A3A" },
+  wornWear:    { n: "Worn Wear Program",               p: "From $49", e: "\u267b\ufe0f", c: "#2D6A4F" },
+};
+
+// ═══════════════════ HELPERS ═══════════════════
+function audioHTML(sender, dur) {
+  const bars = Array.from({length: 24}, () =>
+    `<div class="audio-bar" style="height:${5 + Math.random() * 23}px"></div>`
+  ).join('');
+  return `<div class="message received"><div class="audio-msg" onclick="toggleAudio(this)">
+    <div class="audio-play"><svg viewBox="0 0 12 14"><polygon points="0,0 12,7 0,14"/></svg></div>
+    <div class="audio-bars">${bars}</div></div>
+    <div class="audio-meta"><span class="audio-sender">${sender}</span> · ${dur}</div></div>`;
+}
+
+function carouselHTML(items) {
+  const cards = items.map(k => {
+    const p = P[k];
+    return `<div class="product-card"><div class="product-img" style="background:${p.c}">${p.e}</div>
+      <div class="product-info"><div class="product-name">${p.n}</div>
+      <div class="product-price">${p.p}${p.op ? `<span class="original">${p.op}</span>` : ''}</div></div>
+      <div class="product-cta">View Details</div></div>`;
+  }).join('');
+  return `<div class="carousel-wrapper"><div class="carousel">${cards}</div></div>`;
+}
+
+function discountHTML(amount, code, label) {
+  return `<div class="discount-card"><div class="discount-inner">
+    <div class="discount-amount">${amount}</div>
+    <div class="discount-label">${label}</div>
+    <div class="discount-code">${code}</div></div></div>`;
+}
+
+function cardHTML(emoji, bg, title, desc, btn) {
+  return `<div class="info-card"><div class="info-card-img" style="background:${bg}">${emoji}</div>
+    <div class="info-card-body"><div class="info-card-title">${title}</div>
+    <div class="info-card-desc">${desc}</div>
+    <div class="info-card-btn">${btn}</div></div></div>`;
+}
+
+function textHTML(side, text, aiBadge) {
+  const badge = aiBadge ? `<div class="ai-tag">Personalized by AI</div>` : '';
+  return `<div class="message ${side}">${badge}<div class="bubble">${text}</div></div>`;
+}
+
+function tsHTML(t) { return `<div class="timestamp">${t}</div>`; }
+
+// ═══════════════════ FLOW DEFINITIONS ═══════════════════
+
+const flows = {
+  // ────────── WELCOME ──────────
+  welcome: [
+    { // 0: Greeting
+      msgs: [
+        { h: tsHTML("Today 9:41 AM") },
+        { h: textHTML("received", "Hey there! \ud83d\udc4b Welcome to the Patagonia family.") },
+        { h: textHTML("received", "I'm Ryan Gellert, CEO of Patagonia. Wanted to personally welcome you to our community.") },
+        { h: audioHTML("Ryan Gellert, CEO", "0:23") },
+      ],
+      replies: [
+        { text: "Hey Ryan! \ud83d\udc4b", goto: 1 },
+        { text: "Excited to be here!", goto: 1 },
+      ]
+    },
+    { // 1: Mission + ask
+      msgs: [
+        { h: textHTML("received", "Our mission? Build the best gear, cause no unnecessary harm, and use business to protect nature. \ud83c\udf0d") },
+        { h: textHTML("received", "I'd love to tailor your experience. Mind if I ask a few quick questions?") },
+      ],
+      replies: [
+        { text: "Let's go! \ud83d\ude4c", goto: 2 },
+        { text: "Maybe later", goto: 7 },
+      ]
+    },
+    { // 2: Q1 - Collection
+      msgs: [
+        { h: textHTML("received", "Awesome! First up \u2014 which collection speaks to you?") },
+      ],
+      replies: [
+        { text: "Men's \ud83e\uddd4", goto: 3 },
+        { text: "Women's \ud83d\udc69", goto: 3 },
+        { text: "All collections", goto: 3 },
+      ]
+    },
+    { // 3: Q2 - Activity
+      msgs: [
+        { h: textHTML("received", "Great choice! What's your go-to outdoor activity?") },
+      ],
+      replies: [
+        { text: "Trail Running \ud83c\udfc3", goto: 4 },
+        { text: "Climbing \ud83e\uddd7", goto: 4 },
+        { text: "Skiing \u26f7\ufe0f", goto: 4 },
+        { text: "Surfing \ud83c\udfc4", goto: 4 },
+      ]
+    },
+    { // 4: Q3 - Climate
+      msgs: [
+        { h: textHTML("received", "Love that! Last one \u2014 what climate do you usually adventure in?") },
+      ],
+      replies: [
+        { text: "Cold & Alpine \ud83c\udfd4\ufe0f", goto: 5 },
+        { text: "Temperate \ud83c\udf32", goto: 5 },
+        { text: "Tropical \ud83c\udf0a", goto: 5 },
+      ]
+    },
+    { // 5: AI Results
+      msgs: [
+        { h: textHTML("received", "Perfect profile! Our AI just matched your preferences with our catalog. Here's what we picked for you:", true) },
+        { h: carouselHTML(["nanoPuff", "capilene", "altvia", "houdini"]) },
+        { h: textHTML("received", "And because you're new here \u2014 a little welcome gift \ud83c\udf81") },
+        { h: discountHTML("15% OFF", "WELCOME15", "Your first order \u00b7 Expires in 7 days") },
+      ],
+      replies: [
+        { text: "Shop now \ud83d\uded2", goto: 6 },
+        { text: "Save for later \ud83d\udccc", goto: 6 },
+      ]
+    },
+    { // 6: Closing
+      msgs: [
+        { h: textHTML("received", "You're all set! Your preferences are saved. \u2705") },
+        { h: textHTML("received", "Expect personalized drops, early access, and gear tips tailored just for you. Welcome aboard! \ud83c\udfd4\ufe0f") },
+        { h: textHTML("received", "Text us anytime \u2014 we're always here to help you gear up for your next adventure.") },
+      ],
+      replies: []
+    },
+    { // 7: Maybe later ending
+      msgs: [
+        { h: textHTML("received", "No worries! We'll be here whenever you're ready. \ud83d\ude4f") },
+        { h: textHTML("received", "In the meantime, here's a welcome gift just for you:") },
+        { h: discountHTML("15% OFF", "WELCOME15", "Your first order \u00b7 No rush") },
+        { h: textHTML("received", "Text us anytime to get started!") },
+      ],
+      replies: []
+    },
+  ],
+
+  // ────────── CART ABANDONMENT ──────────
+  cart: [
+    { // 0: Initial nudge
+      msgs: [
+        { h: tsHTML("Today 2:34 PM") },
+        { h: textHTML("received", "Hey Sarah! \ud83d\udc40 Looks like you left some gear behind.") },
+        { h: textHTML("received", "Your Nano Puff\u00ae Jacket is still in your cart\u2026") },
+        { h: cardHTML("\ud83e\udde5", "#1B3A5C", "Nano Puff\u00ae Jacket", "Size M \u00b7 Navy Blue \u00b7 Only 3 left in stock!", "View in Cart \u2192") },
+      ],
+      replies: [
+        { text: "Complete order \u2705", goto: 1 },
+        { text: "Need help deciding? \ud83e\udd14", goto: 2 },
+        { text: "Not interested", goto: 7 },
+      ]
+    },
+    { // 1: Quick checkout
+      msgs: [
+        { h: textHTML("received", "Great call! The Nano Puff is one of our best sellers this season. \ud83d\udd25") },
+        { h: cardHTML("\ud83d\udce6", "linear-gradient(135deg, #34d399, #059669)", "Express Checkout", "Nano Puff\u00ae Jacket \u00b7 Size M<br>Subtotal: $279 \u00b7 Free Shipping", "Proceed to Checkout \u2192") },
+      ],
+      replies: [
+        { text: "Checkout now \u2192", goto: 6 },
+        { text: "Actually, let me think", goto: 2 },
+      ]
+    },
+    { // 2: Help deciding
+      msgs: [
+        { h: textHTML("received", "Of course! What's on your mind? I'm here to help.") },
+      ],
+      replies: [
+        { text: "Sizing questions \ud83d\udccf", goto: 3 },
+        { text: "Show alternatives \ud83d\udd04", goto: 4 },
+        { text: "Price concern \ud83d\udcb0", goto: 5 },
+      ]
+    },
+    { // 3: Sizing help
+      msgs: [
+        { h: textHTML("received", "The Nano Puff runs true to size. Our customers say it's spot-on for a regular fit.") },
+        { h: cardHTML("\ud83d\udccf", "linear-gradient(135deg, #3b82f6, #1d4ed8)", "Fit Guide \u2014 Nano Puff\u00ae", "Chest: M = 38-40\" \u00b7 Regular fit<br>Tip: Layer-friendly without bulk", "Full Size Guide") },
+        { h: textHTML("received", "Want to stick with size M or switch?") },
+      ],
+      replies: [
+        { text: "Size M is perfect", goto: 1 },
+        { text: "Switch to Large", goto: 1 },
+        { text: "Still not sure", goto: 4 },
+      ]
+    },
+    { // 4: Alternatives
+      msgs: [
+        { h: textHTML("received", "Based on what you've been browsing, here are some alternatives you might love:", true) },
+        { h: carouselHTML(["downSweater", "microPuff", "torrent"]) },
+      ],
+      replies: [
+        { text: "I like the Down Sweater!", goto: 6 },
+        { text: "Back to Nano Puff", goto: 1 },
+        { text: "Nothing feels right", goto: 5 },
+      ]
+    },
+    { // 5: Price concern
+      msgs: [
+        { h: textHTML("received", "Totally get it. Quality gear is an investment. Here's something to help:") },
+        { h: audioHTML("Patagonia Gear Specialist", "0:12") },
+        { h: textHTML("received", "Exclusive offer \u2014 valid for the next 2 hours only \u23f0") },
+        { h: discountHTML("10% OFF", "COMEBACK10", "Your cart \u00b7 Expires in 2 hours") },
+      ],
+      replies: [
+        { text: "Apply & checkout \ud83d\uded2", goto: 6 },
+        { text: "Still thinking\u2026", goto: 8 },
+      ]
+    },
+    { // 6: Success
+      msgs: [
+        { h: textHTML("received", "Awesome choice! You're going to love it. \ud83d\ude4f") },
+        { h: textHTML("received", "Your order is confirmed! Expect delivery in 3-5 business days. Free shipping included! \ud83d\udce6") },
+        { h: textHTML("received", "We'll send tracking updates right here. Enjoy your new gear! \ud83c\udfd4\ufe0f") },
+      ],
+      replies: []
+    },
+    { // 7: Not interested
+      msgs: [
+        { h: textHTML("received", "No pressure at all! Before you go \u2014 anything else you're looking for?") },
+      ],
+      replies: [
+        { text: "Something warmer \ud83e\udde5", goto: 9 },
+        { text: "Something lighter \ud83c\udf24\ufe0f", goto: 10 },
+        { text: "Just browsing", goto: 8 },
+      ]
+    },
+    { // 8: Save for later
+      msgs: [
+        { h: textHTML("received", "No rush! We've saved your cart for 48 hours. Here's a little incentive in case you change your mind: \ud83c\udf81") },
+        { h: discountHTML("10% OFF", "JUSTFORYOU", "Any order \u00b7 Valid 48 hours") },
+        { h: textHTML("received", "Text us anytime \u2014 happy to help!") },
+      ],
+      replies: []
+    },
+    { // 9: Warmer alternatives
+      msgs: [
+        { h: textHTML("received", "For maximum warmth, our AI recommends these heavy hitters:", true) },
+        { h: carouselHTML(["tres", "frozenRange", "downHoody"]) },
+      ],
+      replies: [
+        { text: "Love the Frozen Range!", goto: 6 },
+        { text: "Show me more", goto: 4 },
+      ]
+    },
+    { // 10: Lighter alternatives
+      msgs: [
+        { h: textHTML("received", "Here are our best lightweight options for warm-weather adventures:", true) },
+        { h: carouselHTML(["tropic", "airshed", "strider"]) },
+      ],
+      replies: [
+        { text: "The Airshed looks great!", goto: 6 },
+        { text: "Not quite\u2026", goto: 8 },
+      ]
+    },
+  ],
+
+  // ────────── WIN-BACK ──────────
+  winback: [
+    { // 0: Re-engagement
+      msgs: [
+        { h: tsHTML("Today 10:15 AM") },
+        { h: textHTML("received", "Hey Alex! It's been a while\u2026 3 months to be exact! \ud83d\udc99") },
+        { h: textHTML("received", "A lot has changed at Patagonia since we last connected. Ryan recorded a personal message for you.") },
+        { h: audioHTML("Ryan Gellert, CEO", "0:18") },
+      ],
+      replies: [
+        { text: "Hey! Miss you too \ud83d\udc99", goto: 1 },
+        { text: "What's new? \ud83d\udc40", goto: 1 },
+      ]
+    },
+    { // 1: What's new
+      msgs: [
+        { h: textHTML("received", "So much has dropped since you've been away! Check out our latest:") },
+        { h: carouselHTML(["woolJacket", "stormPack", "regenShorts", "cleanTee"]) },
+      ],
+      replies: [
+        { text: "Tell me more \ud83c\udf92", goto: 2 },
+        { text: "Sustainability updates \ud83c\udf31", goto: 3 },
+        { text: "Any deals? \ud83d\udcb0", goto: 4 },
+      ]
+    },
+    { // 2: Gear deep dive
+      msgs: [
+        { h: textHTML("received", "Based on your past purchases, you'll love these picks:", true) },
+        { h: carouselHTML(["nanoPuff", "houdini", "stormPack", "altvia"]) },
+        { h: textHTML("received", "And as a welcome-back gift \u2014 this one's for you: \ud83c\udf81") },
+        { h: discountHTML("20% OFF", "MISSEDYOU20", "Your next order \u00b7 Exclusive to you") },
+      ],
+      replies: [
+        { text: "Shop now \ud83d\uded2", goto: 5 },
+        { text: "Save for later \ud83d\udccc", goto: 5 },
+      ]
+    },
+    { // 3: Sustainability
+      msgs: [
+        { h: textHTML("received", "We've been making big moves this year! \ud83c\udf0d") },
+        { h: textHTML("received", "\u2705 100% recycled packaging on all orders<br>\u2705 73% recycled materials across our line<br>\u2705 2M lbs of ocean plastic removed<br>\u2705 Fair Trade Certified\u2122 across 85% of products") },
+        { h: textHTML("received", "Have you heard of Worn Wear? Buy used, trade in your old Patagonia gear! \u267b\ufe0f") },
+        { h: cardHTML("\u267b\ufe0f", "#2D6A4F", "Worn Wear", "Give your gear a second life. Trade in \u2192 get credit \u2192 shop used.", "Explore Worn Wear") },
+      ],
+      replies: [
+        { text: "Explore Worn Wear \u267b\ufe0f", goto: 5 },
+        { text: "Shop new arrivals", goto: 2 },
+      ]
+    },
+    { // 4: Deals
+      msgs: [
+        { h: textHTML("received", "Perfect timing! End-of-season deals are live: \ud83c\udff7\ufe0f") },
+        { h: carouselHTML(["betterSw", "baggies", "p6tee", "blackHole"]) },
+        { h: textHTML("received", "Plus your exclusive welcome-back discount stacks on top! \ud83c\udf81") },
+        { h: discountHTML("20% OFF", "MISSEDYOU20", "Stacks with sale prices!") },
+      ],
+      replies: [
+        { text: "Shop the sale \ud83d\uded2", goto: 5 },
+        { text: "Browse all products", goto: 2 },
+      ]
+    },
+    { // 5: Final
+      msgs: [
+        { h: textHTML("received", "Welcome back to the Patagonia family! \ud83c\udfd4\ufe0f") },
+        { h: textHTML("received", "We'll keep you posted on drops, deals, and adventures tailored to you.") },
+        { h: textHTML("received", "Text us anytime \u2014 we genuinely missed you! \ud83d\udc99") },
+      ],
+      replies: []
+    },
+  ],
+};
+
+// ═══════════════════ RENDERING ENGINE ═══════════════════
+const state = { welcome: 0, cart: 0, winback: 0 };
+let animating = { welcome: false, cart: false, winback: false };
+
+function getChat(flow) {
+  return document.getElementById(`chat-${flow}`);
+}
+
+function scrollBottom(flow) {
+  const c = getChat(flow);
+  setTimeout(() => { c.scrollTop = c.scrollHeight; }, 50);
+}
+
+function showTyping(flow) {
+  const c = getChat(flow);
+  const el = document.createElement('div');
+  el.className = 'typing';
+  el.id = `typing-${flow}`;
+  el.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+  c.appendChild(el);
+  scrollBottom(flow);
+}
+
+function hideTyping(flow) {
+  const el = document.getElementById(`typing-${flow}`);
+  if (el) el.remove();
+}
+
+function addSent(flow, text) {
+  const c = getChat(flow);
+  const el = document.createElement('div');
+  el.innerHTML = textHTML('sent', text);
+  c.appendChild(el.firstChild);
+  scrollBottom(flow);
+}
+
+function removeReplies(flow) {
+  const c = getChat(flow);
+  const r = c.querySelector('.quick-replies');
+  if (r) r.remove();
+}
+
+function loadStep(flow, stepIdx, userChoice) {
+  if (animating[flow]) return;
+  animating[flow] = true;
+
+  const step = flows[flow][stepIdx];
+  const chat = getChat(flow);
+
+  // Remove existing replies
+  removeReplies(flow);
+
+  // Show user's choice as sent message
+  if (userChoice) {
+    addSent(flow, userChoice);
+  }
+
+  // Show typing
+  setTimeout(() => showTyping(flow), 300);
+
+  // Add messages with staggered delays
+  let delay = 1000;
+  step.msgs.forEach((msg, i) => {
+    setTimeout(() => {
+      hideTyping(flow);
+      const el = document.createElement('div');
+      el.innerHTML = msg.h;
+      while (el.firstChild) chat.appendChild(el.firstChild);
+      scrollBottom(flow);
+      // Show typing for next message (if more to come)
+      if (i < step.msgs.length - 1) {
+        setTimeout(() => showTyping(flow), 200);
+      }
+    }, delay);
+    delay += 800 + Math.random() * 400;
+  });
+
+  // Show quick replies
+  if (step.replies && step.replies.length > 0) {
+    setTimeout(() => {
+      hideTyping(flow);
+      const wrapper = document.createElement('div');
+      wrapper.className = 'quick-replies';
+      step.replies.forEach(r => {
+        const btn = document.createElement('button');
+        btn.className = 'qr-btn';
+        btn.textContent = r.text;
+        btn.onclick = () => {
+          state[flow] = r.goto;
+          loadStep(flow, r.goto, r.text);
+        };
+        wrapper.appendChild(btn);
+      });
+      chat.appendChild(wrapper);
+      scrollBottom(flow);
+      animating[flow] = false;
+    }, delay + 200);
+  } else {
+    setTimeout(() => {
+      hideTyping(flow);
+      animating[flow] = false;
+    }, delay);
+  }
+}
+
+function resetFlow(flow) {
+  const chat = getChat(flow);
+  chat.innerHTML = '';
+  state[flow] = 0;
+  animating[flow] = false;
+  loadStep(flow, 0, null);
+}
+
+function toggleAudio(el) {
+  el.classList.toggle('playing');
+  const playBtn = el.querySelector('.audio-play');
+  if (el.classList.contains('playing')) {
+    playBtn.innerHTML = '<svg viewBox="0 0 10 14" fill="#fff" width="12" height="12"><rect x="0" y="0" width="3" height="14"/><rect x="7" y="0" width="3" height="14"/></svg>';
+    // Auto stop after 3 seconds for demo
+    setTimeout(() => {
+      if (el.classList.contains('playing')) {
+        el.classList.remove('playing');
+        playBtn.innerHTML = '<svg viewBox="0 0 12 14"><polygon points="0,0 12,7 0,14" fill="#fff"/></svg>';
+      }
+    }, 3000);
+  } else {
+    playBtn.innerHTML = '<svg viewBox="0 0 12 14"><polygon points="0,0 12,7 0,14" fill="#fff"/></svg>';
+  }
+}
+
+// ═══════════════════ TAB SWITCHING ═══════════════════
+function switchTab(flow) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.flow-container').forEach(c => c.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  document.getElementById(`flow-${flow}`).classList.add('active');
+}
+
+// ═══════════════════ INIT ═══════════════════
+loadStep('welcome', 0, null);
+loadStep('cart', 0, null);
+loadStep('winback', 0, null);
+</script>
+</body>
+</html>
