@@ -662,6 +662,396 @@ body {
   font-weight: 500;
 }
 
+/* ═══════════════════ RCS HIGH-FIDELITY (Cart Abonnement flow) ═══════════════════ */
+/* Verified Business Banner — shows once at top of conversation, like real RCS */
+.rcs-verified-banner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 16px 22px 18px;
+  margin: 10px auto 14px;
+  width: fit-content;
+  max-width: 320px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  text-align: center;
+  animation: msgIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.rcs-verified-logo {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--patagonia);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 800;
+  color: #fff;
+  position: relative;
+  margin-bottom: 4px;
+  box-shadow: 0 4px 12px rgba(27,58,92,0.25);
+}
+.rcs-verified-logo::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #007AFF;
+  border: 2.5px solid #fff;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'><path fill='white' d='M5.5 10.5L2.5 7.5l1-1 2 2 5-5 1 1z'/></svg>");
+  background-size: 13px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.rcs-verified-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a1a1a;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.rcs-verified-meta {
+  font-size: 11px;
+  color: #8e8e93;
+  font-weight: 500;
+  line-height: 1.5;
+  max-width: 240px;
+}
+.rcs-verified-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 6px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: #eef2ff;
+  font-size: 10px;
+  font-weight: 700;
+  color: #4338ca;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.rcs-verified-tag::before { content: '✓'; color: #007AFF; font-weight: 900; }
+
+/* Bot sender attribution (small label above first bubble of group) */
+.bot-attribution {
+  font-size: 10.5px;
+  color: #8e8e93;
+  font-weight: 500;
+  padding-left: 14px;
+  margin: 10px 0 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  animation: msgIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.bot-attribution-dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #c7c7cc;
+}
+.bot-attribution .ai-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 1px 6px;
+  border-radius: 8px;
+  background: var(--ai-badge);
+  color: #fff;
+  font-weight: 700;
+  font-size: 9px;
+  letter-spacing: 0.3px;
+}
+.bot-attribution .ai-pill::before { content: '✦'; }
+
+/* RCS Universal Product Card (premium, end-of-flow) */
+.rcs-product-card {
+  border-radius: 20px;
+  overflow: hidden;
+  background: #fff;
+  margin: 8px 0;
+  max-width: 295px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.10);
+  animation: msgIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.rcs-product-hero {
+  height: 190px;
+  background: linear-gradient(135deg, #1B3A5C 0%, #2d5278 60%, #3a6390 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 86px;
+  position: relative;
+  overflow: hidden;
+}
+.rcs-product-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 25%, rgba(255,255,255,0.16), transparent 45%),
+    radial-gradient(circle at 80% 85%, rgba(0,0,0,0.20), transparent 55%);
+}
+.rcs-product-hero-emoji {
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 10px 22px rgba(0,0,0,0.40));
+}
+.rcs-product-stock-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-size: 10px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  z-index: 2;
+}
+.rcs-product-stock-badge::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #34d399;
+  margin-right: 6px;
+  vertical-align: middle;
+  box-shadow: 0 0 8px #34d399;
+  animation: pulse 1.6s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.65; transform: scale(0.85); }
+}
+.rcs-product-body {
+  padding: 16px 18px 18px;
+}
+.rcs-product-brand {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: #8e8e93;
+  margin-bottom: 4px;
+}
+.rcs-product-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #1a1a1a;
+  line-height: 1.22;
+  letter-spacing: -0.3px;
+  margin-bottom: 4px;
+}
+.rcs-product-sub {
+  font-size: 12px;
+  color: #636366;
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+.rcs-product-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #f0f0f3;
+}
+.rcs-product-price {
+  font-size: 24px;
+  font-weight: 900;
+  color: #1a1a1a;
+  letter-spacing: -0.6px;
+}
+.rcs-product-price-orig {
+  font-size: 13px;
+  color: #8e8e93;
+  text-decoration: line-through;
+  font-weight: 600;
+}
+.rcs-product-perks {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.rcs-product-perk {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11.5px;
+  color: #1a1a1a;
+  font-weight: 500;
+}
+.rcs-product-perk-icon {
+  width: 14px;
+  text-align: center;
+  font-size: 13px;
+  color: #34c759;
+  font-weight: 700;
+}
+.rcs-product-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.apple-pay-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 44px;
+  border-radius: 22px;
+  background: #000;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  letter-spacing: -0.2px;
+  transition: transform 0.15s, box-shadow 0.15s;
+  border: none;
+  font-family: inherit;
+}
+.apple-pay-btn:hover { transform: scale(1.015); box-shadow: 0 6px 18px rgba(0,0,0,0.25); }
+.apple-pay-btn:active { transform: scale(0.98); }
+.apple-pay-btn .ap-buy { font-weight: 400; }
+.apple-pay-btn .ap-logo {
+  display: inline-flex;
+  align-items: center;
+  font-weight: 600;
+  letter-spacing: -0.4px;
+  font-size: 16px;
+}
+.apple-pay-btn .ap-apple {
+  font-family: -apple-system, system-ui, sans-serif;
+  font-size: 17px;
+  margin-right: 1px;
+  line-height: 1;
+}
+.rcs-secondary-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  border-radius: 20px;
+  border: 1.5px solid #e5e7eb;
+  background: #fff;
+  color: #1a1a1a;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  font-family: inherit;
+}
+.rcs-secondary-btn:hover { background: #f9fafb; }
+
+/* RCS Fit Match card (sizing recommendation) */
+.rcs-fit-card {
+  border-radius: 16px;
+  overflow: hidden;
+  background: #fff;
+  margin: 6px 0;
+  max-width: 282px;
+  box-shadow: 0 2px 14px rgba(0,0,0,0.07);
+  animation: msgIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.rcs-fit-header {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  padding: 11px 14px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.rcs-fit-header-icon { font-size: 16px; }
+.rcs-fit-header-text {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+.rcs-fit-body { padding: 12px 14px 14px; }
+.rcs-fit-recommendation {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  margin-bottom: 10px;
+}
+.rcs-fit-rec-size {
+  font-size: 26px;
+  font-weight: 900;
+  color: #15803d;
+  width: 38px;
+  text-align: center;
+  letter-spacing: -1px;
+}
+.rcs-fit-rec-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #166534;
+  line-height: 1.4;
+}
+.rcs-fit-rec-label small {
+  display: block;
+  font-weight: 500;
+  color: #4d7c5d;
+  font-size: 11px;
+  margin-top: 1px;
+}
+.rcs-fit-detail-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11.5px;
+  padding: 4px 2px;
+  color: #636366;
+}
+.rcs-fit-detail-row + .rcs-fit-detail-row { border-top: 1px solid #f4f4f6; }
+.rcs-fit-detail-row strong { color: #1a1a1a; font-weight: 600; }
+
+/* Read receipt label */
+.read-receipt {
+  text-align: right;
+  font-size: 10px;
+  color: #8e8e93;
+  font-weight: 500;
+  margin: -2px 6px 6px 0;
+  padding-right: 2px;
+  animation: msgIn 0.3s ease;
+}
+
+/* Suggested replies header (RCS-style) */
+.suggested-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-left: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #8e8e93;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 10px 0 -2px;
+  animation: repliesIn 0.4s ease;
+}
+.suggested-label::before { content: '✦'; color: #8b5cf6; }
+
 /* ═══════════════════ RESPONSIVE ═══════════════════ */
 @media (max-width: 500px) {
   .iphone { width: 340px; height: 736px; border-radius: 44px; }
@@ -687,6 +1077,9 @@ body {
   </button>
   <button class="tab-btn" onclick="switchTab('winback')">
     <span class="tab-icon">💙</span> Win-back
+  </button>
+  <button class="tab-btn" onclick="switchTab('abonnement')">
+    <span class="tab-icon">📏</span> Cart Abonnement
   </button>
 </div>
 
@@ -756,6 +1149,29 @@ body {
       <div class="home-indicator"><div class="home-indicator-bar"></div></div>
     </div></div>
     <button class="reset-btn" onclick="resetFlow('winback')">↺ Restart flow</button>
+  </div>
+</div>
+
+<div id="flow-abonnement" class="flow-container">
+  <div class="iphone-wrapper">
+    <div class="iphone"><div class="iphone-screen">
+      <div class="dynamic-island"></div>
+      <div class="status-bar">
+        <div class="status-bar-left">9:41</div>
+        <div class="status-bar-right">
+          <svg width="16" height="12" viewBox="0 0 16 12"><path fill="#1a1a1a" d="M1 7h2v5H1zM5 4h2v8H5zM9 2h2v10H9zM13 0h2v12h-2z"/></svg>
+          <svg width="16" height="12" viewBox="0 0 16 12"><path fill="#1a1a1a" d="M8 2C5.8 2 3.8 2.9 2.3 4.3l1.4 1.4C5 4.4 6.4 3.7 8 3.7s3 .7 4.3 2l1.4-1.4C12.2 2.9 10.2 2 8 2zm0 4c-1.3 0-2.5.5-3.4 1.4L6 8.8c.5-.5 1.2-.8 2-.8s1.5.3 2 .8l1.4-1.4C10.5 6.5 9.3 6 8 6zm0 4a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"/></svg>
+          <svg width="27" height="12" viewBox="0 0 27 12"><rect x="0" y="1" width="22" height="10" rx="2" stroke="#1a1a1a" stroke-width="1" fill="none"/><rect x="23" y="3.5" width="2" height="5" rx="1" fill="#1a1a1a"/><rect x="2" y="3" width="18" height="6" rx="1" fill="#34c759"/></svg>
+        </div>
+      </div>
+      <div class="chat-header">
+        <div class="chat-avatar">P</div>
+        <div><div class="chat-name">Patagonia <small>Verified Business · RCS</small></div></div>
+      </div>
+      <div class="chat-area" id="chat-abonnement"></div>
+      <div class="home-indicator"><div class="home-indicator-bar"></div></div>
+    </div></div>
+    <button class="reset-btn" onclick="resetFlow('abonnement')">↺ Restart flow</button>
   </div>
 </div>
 
@@ -853,6 +1269,76 @@ function sessionHTML(stats) {
 function loyaltyHTML(stats) {
   const items = stats.map(s => `<div class="session-stat"><div class="session-stat-val">${s[0]}</div><div class="session-stat-label">${s[1]}</div></div>`).join('');
   return `<div class="session-insight"><div class="session-insight-header">Your Patagonia Journey</div><div class="session-stats">${items}</div></div>`;
+}
+
+// ═══════════════════ RCS HIGH-FIDELITY HELPERS ═══════════════════
+function rcsBannerHTML() {
+  return `<div class="rcs-verified-banner">
+    <div class="rcs-verified-logo">P</div>
+    <div class="rcs-verified-name">Patagonia</div>
+    <div class="rcs-verified-meta">Verified by RCS Business Messaging<br>Replies are answered by Nudge AI</div>
+    <div class="rcs-verified-tag">Verified Sender</div>
+  </div>`;
+}
+
+function botAttribution(label) {
+  return `<div class="bot-attribution"><span>${label}</span><span class="bot-attribution-dot"></span><span class="ai-pill">Nudge AI</span></div>`;
+}
+
+function rcsFitCardHTML(size, label, sub, rows) {
+  const detailRows = rows.map(r => `<div class="rcs-fit-detail-row"><span>${r[0]}</span><strong>${r[1]}</strong></div>`).join('');
+  return `<div class="rcs-fit-card">
+    <div class="rcs-fit-header">
+      <span class="rcs-fit-header-icon">📐</span>
+      <span class="rcs-fit-header-text">Personal Fit Match</span>
+    </div>
+    <div class="rcs-fit-body">
+      <div class="rcs-fit-recommendation">
+        <div class="rcs-fit-rec-size">${size}</div>
+        <div class="rcs-fit-rec-label">${label}<small>${sub}</small></div>
+      </div>
+      ${detailRows}
+    </div>
+  </div>`;
+}
+
+function rcsProductCardHTML(opts) {
+  // opts: { emoji, gradient, brand, title, sub, price, priceOrig, perks, primaryLabel, secondaryLabel, stockLabel }
+  const perks = (opts.perks || []).map(p =>
+    `<div class="rcs-product-perk"><span class="rcs-product-perk-icon">${p[0]}</span><span>${p[1]}</span></div>`
+  ).join('');
+  const stockBadge = opts.stockLabel ? `<div class="rcs-product-stock-badge">${opts.stockLabel}</div>` : '';
+  const origPrice = opts.priceOrig ? `<span class="rcs-product-price-orig">${opts.priceOrig}</span>` : '';
+  const primary = opts.primaryLabel
+    ? `<button class="apple-pay-btn"><span class="ap-buy">${opts.primaryLabel}</span><span class="ap-logo"><span class="ap-apple"></span>Pay</span></button>`
+    : '';
+  const secondary = opts.secondaryLabel
+    ? `<button class="rcs-secondary-btn">${opts.secondaryLabel}</button>` : '';
+  return `<div class="rcs-product-card">
+    <div class="rcs-product-hero" style="background:${opts.gradient || 'linear-gradient(135deg,#1B3A5C,#3a6390)'}">
+      ${stockBadge}
+      <span class="rcs-product-hero-emoji">${opts.emoji}</span>
+    </div>
+    <div class="rcs-product-body">
+      <div class="rcs-product-brand">${opts.brand || 'Patagonia'}</div>
+      <div class="rcs-product-title">${opts.title}</div>
+      <div class="rcs-product-sub">${opts.sub}</div>
+      <div class="rcs-product-price-row">
+        <span class="rcs-product-price">${opts.price}</span>
+        ${origPrice}
+      </div>
+      ${perks ? `<div class="rcs-product-perks">${perks}</div>` : ''}
+      <div class="rcs-product-actions">${primary}${secondary}</div>
+    </div>
+  </div>`;
+}
+
+function readReceiptHTML(time) {
+  return `<div class="read-receipt">Read ${time}</div>`;
+}
+
+function suggestedLabelHTML(text) {
+  return `<div class="suggested-label">${text || 'Suggested replies'}</div>`;
 }
 
 // ═══════════════════ FLOW DEFINITIONS ═══════════════════
@@ -1179,11 +1665,116 @@ const flows = {
       replies: []
     },
   ],
+
+  // \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 CART ABONNEMENT (RCS High-Fidelity Demo) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+  abonnement: [
+    { // 0: Verified RCS opener \u2014 sizing question
+      msgs: [
+        { h: rcsBannerHTML() },
+        { h: tsHTML("Today 3:42 PM") },
+        { h: botAttribution("Patagonia") },
+        { h: textHTML("received", "Hey Sarah \ud83d\udc4b") },
+        { h: textHTML("received", "Are you still unsure about the sizing on the Better Sweater\u00ae? I can help you here with answering your follow-up questions.") },
+        { h: cardHTML("\ud83e\udde5", "linear-gradient(135deg, #3A4A3A, #4d5e4d)", "Better Sweater\u00ae Jacket", "Stonewash \u00b7 In your cart \u00b7 You browsed it 4 times this week", "View in Cart \u2192") },
+      ],
+      replies: [
+        { text: "Yes, between M and L \ud83d\udccf", goto: 1 },
+        { text: "Will it fit my build? \ud83d\udcd0", goto: 1 },
+        { text: "What size do most pick?", goto: 1 },
+      ]
+    },
+    { // 1: Sizing follow-up \u2014 solo vs layering
+      msgs: [
+        { h: botAttribution("Patagonia") },
+        { h: textHTML("received", "Totally common ask \u2014 the Better Sweater\u00ae fits true to size with a slim-modern cut. Quick context to nail it \ud83d\udc47") },
+        { h: textHTML("received", "Will you mostly wear it <strong>solo</strong>, or <strong>layer it</strong> under a shell?") },
+      ],
+      replies: [
+        { text: "Mostly solo \u2600\ufe0f", goto: 2 },
+        { text: "Layer under a shell \ud83e\uddca", goto: 2 },
+        { text: "Both situations", goto: 2 },
+      ]
+    },
+    { // 2: Recommendation with Personal Fit Match card
+      msgs: [
+        { h: botAttribution("Patagonia") },
+        { h: textHTML("received", "Got it. Based on your past Patagonia order (Capilene\u00ae M last March) and a slim-modern fit, here's your match:") },
+        { h: rcsFitCardHTML("M", "Medium is your size", "Sharp at the chest, room for one base layer", [
+          ["Chest (M)", "38\u201340\""],
+          ["Body length (M)", "27.5\""],
+          ["Fit profile", "Regular \u00b7 Layer-ready"],
+          ["Returns window", "Free \u00b7 60 days"]
+        ]) },
+        { h: textHTML("received", "Want to hear from a verified buyer with your build before deciding?") },
+      ],
+      replies: [
+        { text: "Show me a review \ud83c\udf1f", goto: 3 },
+        { text: "I'm sold \u2014 Medium it is \u2705", goto: 4 },
+      ]
+    },
+    { // 3: Verified review proof
+      msgs: [
+        { h: botAttribution("Patagonia") },
+        { h: textHTML("received", "Here's a verified buyer at 5'10, 170lbs \u2014 same build as you:") },
+        { h: reviewHTML(5, "5.0", "892", "Medium fits exactly like the Capilene\u00ae M I had. Sharp solo, perfect under a shell. Don't size up.", "Marcus T., Verified Buyer") },
+        { h: textHTML("received", "Same call \u2014 lock in the Medium. Ready?") },
+      ],
+      replies: [
+        { text: "Lock in the Medium \ud83d\uded2", goto: 4 },
+        { text: "Let me think \ud83e\udd14", goto: 5 },
+      ]
+    },
+    { // 4: Final RCS Universal Product Card with Apple Pay
+      msgs: [
+        { h: botAttribution("Patagonia") },
+        { h: textHTML("received", "On it \ud83d\udd12 Here's your express checkout \u2014 one tap to confirm:") },
+        { h: rcsProductCardHTML({
+          emoji: "\ud83e\udde5",
+          gradient: "linear-gradient(135deg, #3A4A3A 0%, #4d5e4d 55%, #5d6e5d 100%)",
+          brand: "PATAGONIA \u00b7 BETTER SWEATER\u00ae",
+          title: "Better Sweater\u00ae Jacket",
+          sub: "Size <strong>Medium</strong> \u00b7 Stonewash \u00b7 Ships from Reno, NV",
+          price: "$149",
+          priceOrig: "",
+          stockLabel: "In stock \u00b7 3 left",
+          perks: [
+            ["\u2713", "Free 2-day shipping"],
+            ["\u2713", "Free returns \u00b7 60 days"],
+            ["\u267b\ufe0f", "Lifetime repairs (Worn Wear)"],
+          ],
+          primaryLabel: "Buy with",
+          secondaryLabel: "Review order details",
+        }) },
+        { h: readReceiptHTML("Read 3:43 PM") },
+        { h: textHTML("received", "\ud83c\udf89 You're all set, Sarah! Tracking will arrive right here in this chat.") },
+      ],
+      replies: []
+    },
+    { // 5: Save for later soft-close
+      msgs: [
+        { h: botAttribution("Patagonia") },
+        { h: textHTML("received", "No rush at all \u2014 your size match is saved. \ud83d\udccc") },
+        { h: textHTML("received", "I've held the Medium in stock for you for 24 hours. Text me here anytime to check out, ask another question, or compare another size.") },
+        { h: discountHTML("10% OFF", "FITMATCH10", "Better Sweater\u00ae \u00b7 Valid 24h \u00b7 Sarah's code") },
+      ],
+      replies: [
+        { text: "Actually, let's check out \ud83d\uded2", goto: 4 },
+        { text: "Talk soon \ud83d\udc4b", goto: 6 },
+      ]
+    },
+    { // 6: Quiet exit
+      msgs: [
+        { h: botAttribution("Patagonia") },
+        { h: textHTML("received", "Sounds good \u2014 catch you later! \ud83d\udc99") },
+      ],
+      replies: []
+    },
+  ],
 };
 
 // ═══════════════════ RENDERING ENGINE ═══════════════════
-const state = { welcome: 0, cart: 0, winback: 0 };
-let animating = { welcome: false, cart: false, winback: false };
+const state = { welcome: 0, cart: 0, winback: 0, abonnement: 0 };
+let animating = { welcome: false, cart: false, winback: false, abonnement: false };
 
 function getChat(flow) {
   return document.getElementById(`chat-${flow}`);
@@ -1323,6 +1914,7 @@ function switchTab(flow) {
 loadStep('welcome', 0, null);
 loadStep('cart', 0, null);
 loadStep('winback', 0, null);
+loadStep('abonnement', 0, null);
 </script>
 </body>
 </html>
